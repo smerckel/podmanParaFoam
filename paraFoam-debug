@@ -1,0 +1,26 @@
+#!/bin/bash
+
+CWD=`pwd`
+PARAVIEW_CONFIG_DIR=$HOME/.config/ParaView
+
+if [ ! -d $PARAVIEW_CONFIG_DIR ]; then
+    mkdir -p $PARAVIEW_CONFIG_DIR
+fi
+
+
+CWD=`pwd`
+caseDir=`basename $CWD`
+
+cd ..
+CWD=`pwd`
+
+
+PARAVIEW_CONFIG_DIR=$HOME/.config/ParaView
+
+if [ ! -d $PARAVIEW_CONFIG_DIR ]; then
+    mkdir -p $PARAVIEW_CONFIG_DIR
+fi
+
+podman run -ti --security-opt=label=disable -e DISPLAY=$DISPLAY -v $CWD:/root/case -v $HOME/.config/ParaView:/root/.config/ParaView -v /tmp/.X11-unix:/tmp/.X11-unix openfoam /usr/bin/bash
+
+
