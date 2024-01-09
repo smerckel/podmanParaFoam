@@ -16,8 +16,10 @@ RUN apt-get -y install openfoam10
 
 RUN apt-get -y install x11-apps
 
-RUN mkdir $HOME/case
+
+RUN echo "export USER=root" >> $HOME/.bashrc
 RUN echo "source /opt/openfoam10/etc/bashrc" >> $HOME/.bashrc
+RUN mkdir -p /root/OpenFOAM/root-10
 
 COPY entry_scripts/* /usr/local/bin
 
