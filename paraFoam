@@ -1,11 +1,30 @@
 #!/bin/bash
 
+# Process command-line arguments
+for arg in "$@"; do
+    case $arg in
+        --debug)
+            debug=true
+            ;;
+        *)
+            # Handle other arguments as needed
+            ;;
+    esac
+done
+
 CWD=`pwd`
+caseDirectory=`basename $CWD`
+
 PARAVIEW_CONFIG_DIR=$HOME/.config/ParaView
 
 if [ ! -d $PARAVIEW_CONFIG_DIR ]; then
     mkdir -p $PARAVIEW_CONFIG_DIR
 fi
 
-podman run -ti --security-opt=label=disable -e DISPLAY=$DISPLAY -v $CWD:/root/case -v $HOME/.config/ParaView:/root/.config/ParaView -v /tmp/.X11-unix:/tmp/.X11-unix openfoam start_parafoam.sh 
+PODMAN_OPTIONS="run --rm -ti --security-opt=label=disable -e DISPLAY=$DISPLAY -v $CWD:/root/OpenFOAM/root-10/run/$caseDirectory -v $HOME/.config/ParaView:/root/.config/ParaView -v /tmp/.X11-unix:/tmp/.X11-unix"
 
+if [ $debug ]; then
+    podman $PODMAN_OPTIONS openfoam /usr/bin/bash
+else
+    podman $PODMAN_OPTIONS openfoam start_parafoam.sh $caseDirectory
+fi
